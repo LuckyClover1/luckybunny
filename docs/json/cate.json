@@ -1,0 +1,16 @@
+{
+    "绘本故事": [
+        {
+            "name": "贝乐虎绘本故事",
+            "icon": "http://xiaji1.oss-cn-hangzhou.aliyuncs.com/Guoxue/bellehuhuiben.jpg",
+            "id": 82
+        }
+    ],
+    "童话故事": [
+        {
+            "name": "乐多梦童话故事",
+            "icon": "http://xiaji1.oss-cn-hangzhou.aliyuncs.com/Huahua/leduomeng.jpg",
+            "id": 15
+        }
+    ]
+}
