@@ -100,7 +100,8 @@
     makeRequest('GET', "json/media-"+cateId+".json", null, (err, data) => {
 
         var list = document.getElementById("mediaList");
-        for (var media in data){
+        for (var index in data){
+            var media = data[index];
             var item = document.createElement("div");
             item.setAttribute("class", "video-item");
             item.setAttribute("data-video-src", media["videoUrl"]);
