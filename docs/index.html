@@ -1,3 +1,117 @@
-<video width="320" height="240" controls>
-    <source src="http://poerty.wuqiongda8888.com/lemengduogushi/9.mp4" type="video/mp4">
-</video>
+<!-- <html>
+    <video width="320" height="240" controls>
+        <source src="http://poerty.wuqiongda8888.com/lemengduogushi/9.mp4" type="video/mp4">
+    </video><br>
+    <video width="320" height="240" controls>
+        <source src="http://res1.ubestkid.com/blk/m/006001_wmzk.mp4" type="video/mp4">
+    </video>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频播放列表示例</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-container {
+  margin-bottom: 20px;
+}
+
+.video-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.video-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  background-color: white;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.video-item img {
+  width: 30%;
+  height: 90px;
+  margin-right: 10px;
+}
+
+.video-item p {
+  margin: 0;
+  width: 70%;
+  font-size: 16px;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 顶部视频播放窗口 -->
+        <div class="video-container">
+          <video id="mainVideo" width="640" height="360" controls>
+            <source id="mainVideoSource" src="path/to/yourvideo1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <!-- 下方视频列表 -->
+        <div class="video-list">
+          <div class="video-item" data-video-src="path/to/yourvideo1.mp4">
+            <img src="https://vthumb.ykimg.com/054101015D1D974F15673C8C7208311A" alt="Video 1 Thumbnail">
+            <p>视频 1</p>
+          </div>
+          <div class="video-item" data-video-src="path/to/yourvideo2.mp4">
+            <img src="https://vthumb.ykimg.com/054101015D1D974F15673C8C7208311A" alt="Video 2 Thumbnail">
+            <p>视频 2</p>
+          </div>
+          <div class="video-item" data-video-src="path/to/yourvideo3.mp4">
+            <img src="https://vthumb.ykimg.com/054101015D1D974F15673C8C7208311A" alt="Video 3 Thumbnail">
+            <p>视频 3</p>
+          </div>
+          <!-- 可以根据需要添加更多视频项 -->
+        </div>
+      </div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var mainVideo = document.getElementById('mainVideo');
+        var mainVideoSource = document.getElementById('mainVideoSource');
+        var videoItems = document.querySelectorAll('.video-item');
+
+        videoItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                var newVideoSrc = item.getAttribute('data-video-src');
+                mainVideoSource.src = newVideoSrc;
+                mainVideo.load();
+                mainVideo.play();
+            });
+        });
+    });
+</script>
+
+</html>
