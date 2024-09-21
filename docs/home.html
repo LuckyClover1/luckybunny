@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>视频播放列表示例</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript"  src="js/httpclient.js"></script>
+    <style>
+        .cate-list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .cate-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .cate-item img {
+            width: 30%;
+            height: 90px;
+            margin-right: 10px;
+        }
+
+        .cate-item p {
+            margin: 0;
+            width: 70%;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cate-list">
+        <div class="cate-item" data-cate-id="">
+            <img src="" alt="">
+            <p>童话故事</p>
+        </div>
+        <!-- 可以根据需要添加更多视频项 -->
+    </div>
+</body>
+<script>
+    makeRequest('GET',"cate.json",null, (err, data)=>{
+        alert(data);
+    })
+</script>
+</html>
