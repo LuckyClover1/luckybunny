@@ -47,7 +47,7 @@
 </head>
 
 <body>
-    <div id ="cat-list">
+    <div id ="cate-list">
         <p>分组</p>
         <div class="cate-list">
             <div class="cate-item" data-cate-id="">
@@ -81,18 +81,20 @@
             p.innerHTML = cate;
             document.getElementById("cate-list").appendChild(p);
 
-            for (var cat in data[cate]){
+            var list = data[cate];
+            for (var index in list){
+                var item = list[index];
                 var div = document.createElement("div");
                 div.setAttribute("class","cate-list");
 
                 var imgdiv = document.createElement("div");
                 imgdiv.setAttribute("class","cate-item");
-                imgdiv.setAttribute("data-cate-id",cat["id"]);
+                imgdiv.setAttribute("data-cate-id",item["id"]);
 
-                var img = document.setAttribute("src",cat["icon"]);
+                var img = document.setAttribute("src",item["icon"]);
                 
                 var catName = document.createElement("p");
-                catName.innerHTML = cat["name"];
+                catName.innerHTML = item["name"];
 
                 imgdiv.appendChild(img);
                 imgdiv.appendChild(catName);
