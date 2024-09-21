@@ -96,7 +96,7 @@
     </div>
 </body>
 <script>
-    var cateId=new URLSearchParams(window.location.href).get("id");
+    var cateId=new URLSearchParams(window.location.search).get("id");
     makeRequest('GET', "json/media-"+cateId+".json", null, (err, data) => {
 
         var list = document.getElementById("mediaList");
