@@ -91,7 +91,8 @@
                 imgdiv.setAttribute("class","cate-item");
                 imgdiv.setAttribute("data-cate-id",item["id"]);
 
-                var img = document.setAttribute("src",item["icon"]);
+                var img = document.createComment("img");
+                img.setAttribute("src",item["icon"]);
                 
                 var catName = document.createElement("p");
                 catName.innerHTML = item["name"];
