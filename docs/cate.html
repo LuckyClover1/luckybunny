@@ -78,7 +78,27 @@
         }
     </style>
 </head>
-
+<script>
+    const registerServiceWorker = async () => {
+  if ("serviceWorker" in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register("/js/sw.js", {
+        scope: "/",
+      });
+      if (registration.installing) {
+        console.log("Service worker installing");
+      } else if (registration.waiting) {
+        console.log("Service worker installed");
+      } else if (registration.active) {
+        console.log("Service worker active");
+      }
+    } catch (error) {
+      console.error(`Registration failed with ${error}`);
+    }
+  }
+};
+   registerServiceWorker();
+</script>
 <body>
     <div style="float: left;"><a href="index.html">&lt;&lt;返回</a></div>
     <div class="container">
