@@ -18,7 +18,7 @@
     <meta name="format-detection" content="telephone=no" />
     <link rel="manifest" href="manifest.json" />
     <script type="text/javascript" src="js/httpclient.js"></script>
-    <title>视频播放列表示例</title>
+    <title>故事</title>
     <style>
         body {
             display: flex;
@@ -129,6 +129,7 @@
             var item = document.createElement("div");
             item.setAttribute("class", "video-item");
             item.setAttribute("data-video-src", media["videoUrl"]);
+            item.setAttribute("data-video-name", media["name"]);
 
             var img = document.createElement("img");
             img.setAttribute("src", media["icon"]);
@@ -151,6 +152,7 @@
                 mainVideoSource.src = newVideoSrc;
                 mainVideo.load();
                 mainVideo.play();
+                document.title = item.getAttribute("ata-video-name")
             });
         });
     })
