@@ -1,0 +1,44 @@
+{
+    "name": "故事",
+    "short_name": "故事",
+    "start_url": "https://luckyclover1.github.io/luckybunny",
+    "display": "standalone",
+    "background_color": "#212121",
+    "theme_color": "#FF0000",
+    "description": "故事",
+    "dir": "ltr",
+    "lang": "zh-CN",
+    "icons": [
+      {
+        "src": "icons/48.png",
+        "sizes": "48x48",
+        "type": "image/png"
+      },
+      {
+        "src": "icons/72.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      },
+      {
+        "src": "icons/96.png",
+        "sizes": "96x96",
+        "type": "image/png",
+        "purpose": ""
+      },
+      {
+        "src": "icons/144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "icons/168.png",
+        "sizes": "167x167",
+        "type": "image/png"
+      },
+      {
+        "src": "icons/192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ]
+  }
