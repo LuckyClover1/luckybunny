@@ -68,6 +68,7 @@ const addResourcesToCache = async (resources) => {
         '/luckybunny/',
         '/luckybunny/index.html',
         '/luckybunny/cate.html',
+        '/luckybunny/cate_bilibili.html',
         '/luckybunny/app.js',
       ])
     );
