@@ -87,6 +87,7 @@
                 var imgdiv = document.createElement("div");
                 imgdiv.setAttribute("class","cate-item");
                 imgdiv.setAttribute("data-cate-id",item["id"]);
+                imgdiv.setAttribute("data-source", item["source"]);
 
                 var img = document.createElement("img");
                 img.setAttribute("src",item["icon"]);
@@ -107,7 +108,13 @@
         cateItems.forEach(function (item) {
             item.addEventListener('click', function () {
                 var catId = item.getAttribute('data-cate-id');
-                window.location.href="cate.html?id="+ catId
+                var source = item.getAttribute('data-source');
+                if(source=="bilibili"){
+                  window.location.href="cate_bilibili.html?id="+ catId
+                }else{
+                  window.location.href="cate.html?id="+ catId
+                }
+              
             });
         });
     });

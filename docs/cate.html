@@ -120,7 +120,9 @@
     </div>
 </body>
 <script>
-    var cateId=new URLSearchParams(window.location.search).get("id");
+    var param = new URLSearchParams(window.location.search);
+    var cateId=param.get("id");
+    var source=param.get("source");
     makeRequest('GET', "json/media-"+cateId+".json", null, (err, data) => {
 
         var list = document.getElementById("mediaList");
