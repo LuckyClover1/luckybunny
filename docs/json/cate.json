@@ -2,13 +2,13 @@
     "绘本故事":[
         {
             "name":"中国民间故事",
-            "icon":"https://bkimg.cdn.bcebos.com/pic/d043ad4bd11373f08202631038445cfbfbedaa64aea3",
+            "icon":"https://raw.githubusercontent.com/LuckyClover1/luckybunny/refs/heads/release/docs/images/dxB35DL7t0MeKk2A7Q6k9p7AaCSL0SDulcqxmOFHbgnA91522582697213compressflag.jpg",
             "source":"bilibili",
             "id":100005
         },
         {
             "name":"猫小帅睡前故事",
-            "icon":"https://bkimg.cdn.bcebos.com/pic/79f0f736afc3793186aad028e1c4b74542a911f4",
+            "icon":"https://raw.githubusercontent.com/LuckyClover1/luckybunny/refs/heads/release/docs/images/79f0f736afc3793186aad028e1c4b74542a911f4.webp",
             "source":"bilibili",
             "id":100004
         },
