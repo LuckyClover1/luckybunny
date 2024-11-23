@@ -1,0 +1,142 @@
+[
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575058&p=1",
+        "cid": 26567575058,
+        "id": 1,
+        "name": "第1集《三个和尚》",
+        "icon": "http://i1.hdslb.com/bfs/storyff/n241101sa1dgd1vchx5esq22a35wwikh_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575230&p=2",
+        "cid": 26567575230,
+        "id": 2,
+        "name": "第2集《灶王爷传说》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101safdh92ayqgnzo30mwczfgd9x_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575390&p=3",
+        "cid": 26567575390,
+        "id": 3,
+        "name": "第3集《金斧头、银斧头和铁斧头》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sak5wefafglbov24eafsq98p3_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575463&p=4",
+        "cid": 26567575463,
+        "id": 4,
+        "name": "第4集《十二生肖的故事》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sa3jbgv8an1250m37ai9gjnoy_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575340&p=5",
+        "cid": 26567575340,
+        "id": 5,
+        "name": "第5集《孟姜女》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sa20416iqvt139s1aricel7e9_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575481&p=6",
+        "cid": 26567575481,
+        "id": 6,
+        "name": "第6集《布谷鸟的传说》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sa2j2gy7jvqf34p19y1dijqp1_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575683&p=7",
+        "cid": 26567575683,
+        "id": 7,
+        "name": "第7集《田螺姑娘》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sa3k833qv0qiwng7eq6l3rlhn_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575514&p=8",
+        "cid": 26567575514,
+        "id": 8,
+        "name": "第8集《狼外婆》",
+        "icon": "http://i1.hdslb.com/bfs/storyff/n241101sa33ah9i8zdurt21dpju7ej9l_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567575888&p=9",
+        "cid": 26567575888,
+        "id": 9,
+        "name": "第9集《嫦娥奔月》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sa3goh9gn4uf1xm3u7zq6gwut_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639105&p=10",
+        "cid": 26567639105,
+        "id": 10,
+        "name": "第9集《女娲补天》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sa2bvk1udktzov845e3jlin4q_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639154&p=11",
+        "cid": 26567639154,
+        "id": 11,
+        "name": "第11集《牛郎织女》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sa3te2fzkybraqo1ansbeuhw9_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639205&p=12",
+        "cid": 26567639205,
+        "id": 12,
+        "name": "第12集《长发妹》",
+        "icon": "http://i1.hdslb.com/bfs/storyff/n241101sa3m5720hfk90xd1ikl11nrcz_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639576&p=13",
+        "cid": 26567639576,
+        "id": 13,
+        "name": "第13集《马头琴的故事》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sa2barnniv3t36i1f92tadcvk_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639412&p=14",
+        "cid": 26567639412,
+        "id": 14,
+        "name": "第14集《老鼠嫁女》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sa38ve11h3ond0329sa11ip3n_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639520&p=15",
+        "cid": 26567639520,
+        "id": 15,
+        "name": "第15集《花木兰》",
+        "icon": "http://i1.hdslb.com/bfs/storyff/n241101sa20xbrtrms4txt1o0ml91a5r_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639379&p=16",
+        "cid": 26567639379,
+        "id": 16,
+        "name": "第16集《梁山伯与祝英台》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sagbgipn8awf5ggpafhwljpab_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639499&p=17",
+        "cid": 26567639499,
+        "id": 17,
+        "name": "第17集《三根金头发》",
+        "icon": "http://i1.hdslb.com/bfs/storyff/n241101sazdgvo23cvylr1ode1dtys5o_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639815&p=18",
+        "cid": 26567639815,
+        "id": 18,
+        "name": "第18集《东郭先生》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sa1dee44f5vh0m01o9yqx7c6o_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639852&p=19",
+        "cid": 26567639852,
+        "id": 19,
+        "name": "第19集《年的故事》",
+        "icon": "http://i2.hdslb.com/bfs/storyff/n241101sa1090ms03xvizz1n265zegkr_firsti.jpg"
+    },
+    {
+        "videoUrl": "//player.bilibili.com/player.html?isOutside=true&aid=113408057934548&bvid=BV182SoYkEKT&cid=26567639990&p=20",
+        "cid": 26567639990,
+        "id": 20,
+        "name": "第20集《白蛇传》",
+        "icon": "http://i0.hdslb.com/bfs/storyff/n241101sa1klcum37fg9m23b7saaavy6_firsti.jpg.avif"
+    }
+]
