@@ -1,0 +1,35 @@
+name: landscape-polish
+on:
+  push:
+    paths:
+      - .github/workflows/landscape-polish.yml
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release
+          fetch-depth: 0
+      - name: Pull new pages
+        run: |
+          set -e
+          curl -fsSL -o /tmp/cate.html "https://aka.doubaocdn.com/s/VoU3N732ZS"
+          curl -fsSL -o /tmp/bili.html "https://aka.doubaocdn.com/s/WOIpjj8C8c"
+          test "$(wc -c < /tmp/cate.html)" = "30245"
+          test "$(wc -c < /tmp/bili.html)" = "23366"
+          grep -q "orientation: landscape" /tmp/cate.html
+          grep -q "100vh - 50px" /tmp/bili.html
+          grep -q "-webkit-line-clamp: 1" /tmp/cate.html
+          cp /tmp/cate.html docs/cate.html
+          cp /tmp/bili.html docs/cate_bilibili.html
+      - name: Commit and push
+        run: |
+          git config user.name "LuckyClover1"
+          git config user.email "2418569961@qq.com"
+          git add docs/cate.html docs/cate_bilibili.html
+          git rm -q .github/workflows/landscape-polish.yml
+          git commit -m "feat(ui): 横屏播放器最大化 + 右侧纯文字选集"
+          git push origin HEAD:release
