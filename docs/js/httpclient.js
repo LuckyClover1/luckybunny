@@ -1,3 +1,21 @@
+// 品牌图标：统一使用矢量 Logo。三个页面都加载本脚本，不必逐页修改 head。
+(function () {
+    if (typeof document === 'undefined') return;
+    var base = document.querySelector('link[rel="manifest"]');
+
+    // 移除旧的 PNG 图标声明
+    var olds = document.querySelectorAll('link[rel="icon"]');
+    for (var i = olds.length - 1; i >= 0; i--) {
+        if (olds[i].parentNode) olds[i].parentNode.removeChild(olds[i]);
+    }
+
+    var svg = document.createElement('link');
+    svg.rel = 'icon';
+    svg.type = 'image/svg+xml';
+    svg.href = 'icons/logo.svg';
+    document.head.appendChild(svg);
+})();
+
 function makeRequest(method, url, data, callback) {
     // 创建XMLHttpRequest对象
     var xhr = new XMLHttpRequest();
