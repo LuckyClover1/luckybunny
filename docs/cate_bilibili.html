@@ -438,6 +438,102 @@
             display: block;
             margin-bottom: 10px;
         }
+
+        /* ============ 横屏：左播放器 + 右选集 ============ */
+        @media (orientation: landscape) and (max-height: 520px) {
+
+            html,
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .sticky {
+                position: relative;
+                top: auto;
+                flex: 1 1 62%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 100%;
+                padding: 8px calc(8px + var(--safe-r)) 8px calc(10px + var(--safe-l));
+                border-bottom: none;
+                box-shadow: none;
+            }
+
+            .sticky.scrolled {
+                border-bottom-color: transparent;
+                box-shadow: none;
+            }
+
+            .topbar {
+                padding: 0 0 6px;
+            }
+
+            .titles h1 {
+                font-size: 13.5px;
+            }
+
+            .player-box {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                margin: 0;
+                max-width: none;
+            }
+
+            .player {
+                width: 100%;
+                max-width: calc((100vh - 136px) * 16 / 9);
+                margin: 0 auto;
+                border-radius: 12px;
+                flex: none;
+            }
+
+            .player-hint {
+                flex: none;
+                width: 100%;
+                max-width: calc((100vh - 136px) * 16 / 9);
+                padding: 5px 2px 0;
+                font-size: 11px;
+                justify-content: center;
+            }
+
+            .wrap {
+                flex: 0 0 38%;
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 8px calc(10px + var(--safe-r)) 14px calc(8px + var(--safe-l));
+                max-width: none;
+                border-left: 1px solid var(--line);
+            }
+
+            .list-head {
+                padding: 0 2px 8px;
+            }
+
+            .row {
+                padding: 6px;
+            }
+
+            .row .thumb {
+                width: 84px;
+            }
+
+            .row .name {
+                font-size: 13.5px;
+            }
+        }
     </style>
 </head>
 
@@ -575,7 +671,6 @@
                         thumb.appendChild(img);
                         lastIcon = item.icon;
                     }
-
                     var mask = document.createElement('span');
                     mask.className = 'play-mask';
                     mask.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.55.84l9.6-6.5a1 1 0 0 0 0-1.68l-9.6-6.5A1 1 0 0 0 8 5.5z"/></svg>';
