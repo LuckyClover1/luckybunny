@@ -16,6 +16,17 @@
     document.head.appendChild(svg);
 })();
 
+// 播放页横屏布局：样式集中在 css/player.css，按需加载，首页不受影响。
+(function () {
+    if (typeof document === 'undefined' || !document.querySelector) return;
+    if (!document.querySelector('.player')) return;
+
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'css/player.css';
+    document.head.appendChild(link);
+})();
+
 function makeRequest(method, url, data, callback) {
     // 创建XMLHttpRequest对象
     var xhr = new XMLHttpRequest();
