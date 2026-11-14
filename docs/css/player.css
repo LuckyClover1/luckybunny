@@ -1,0 +1,169 @@
+/* 播放页（cate.html / cate_bilibili.html）横屏布局
+   由 js/httpclient.js 检测到 .player 后按需加载，首页不受影响。 */
+
+@media (orientation: landscape) and (max-height: 520px) {
+
+    html {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        display: flex;
+        align-items: stretch;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* ---------- 左侧：播放器尽量占满 ---------- */
+    .sticky {
+        position: relative;
+        top: auto;
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        padding: 6px calc(6px + var(--safe-r)) 6px calc(8px + var(--safe-l));
+        border-bottom: none;
+        box-shadow: none;
+    }
+
+    .sticky.scrolled {
+        border-bottom-color: transparent;
+        box-shadow: none;
+    }
+
+    .topbar {
+        padding: 0 0 4px;
+        gap: 8px;
+    }
+
+    .back {
+        width: 26px;
+        height: 26px;
+        border-radius: 9px;
+    }
+
+    .back svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .titles h1 {
+        font-size: 12.5px;
+        line-height: 1.25;
+    }
+
+    .titles p {
+        font-size: 10.5px;
+        line-height: 1.25;
+    }
+
+    .now-badge,
+    .src-badge {
+        font-size: 10px;
+        padding: 2px 7px;
+    }
+
+    .player-box {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        max-width: none;
+    }
+
+    .player {
+        width: min(100%, calc((100vh - 50px) * 16 / 9));
+        max-width: none;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+
+    /* B 站页底部那行提示横屏隐藏，把高度全部让给播放器 */
+    .player-hint {
+        display: none;
+    }
+
+    /* ---------- 右侧：纯文字选集 ---------- */
+    .wrap {
+        flex: 0 0 27%;
+        min-width: 182px;
+        max-width: 264px;
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 6px calc(8px + var(--safe-r)) 12px calc(6px + var(--safe-l));
+        border-left: 1px solid var(--line);
+    }
+
+    .list-head {
+        padding: 0 2px 6px;
+        gap: 6px;
+    }
+
+    .list-head .dot {
+        width: 3px;
+        height: 12px;
+    }
+
+    .list-head h2 {
+        font-size: 12.5px;
+    }
+
+    .list-head .count {
+        font-size: 10.5px;
+        padding: 1px 7px;
+    }
+
+    .auto-btn {
+        font-size: 10.5px;
+        padding: 2px 7px;
+    }
+
+    .list {
+        gap: 5px;
+    }
+
+    .row {
+        padding: 5px 8px;
+        border-radius: 10px;
+        gap: 0;
+    }
+
+    /* 横屏去掉缩略图，只留 EP 序号 + 标题，一屏能看到更多集 */
+    .row .thumb {
+        display: none;
+    }
+
+    .row .info {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+    }
+
+    .row .idx {
+        flex: none;
+        font-size: 10px;
+        letter-spacing: .03em;
+    }
+
+    .row .eq {
+        height: 9px;
+        margin-left: 2px;
+    }
+
+    .row .name {
+        flex: 1;
+        min-width: 0;
+        margin-top: 0;
+        font-size: 12px;
+        line-height: 1.3;
+        -webkit-line-clamp: 1;
+    }
+}
