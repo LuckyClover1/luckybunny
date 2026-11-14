@@ -1,86 +1,73 @@
-const addResourcesToCache = async (resources) => {
-    // 打开缓存
-    const cache = await caches.open('v1');
-    // 将资源添加到缓存中
-    await cache.addAll(resources);
-  };
-  
-  const putInCache = async (request, response) => {
-    // 打开缓存
-    const cache = await caches.open('v1');
-    // 将请求和响应放入缓存
-    await cache.put(request, response);
-  };
-  
-  const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
-    // 首先尝试从缓存中获取资源
-    const responseFromCache = await caches.match(request,{ignoreSearch:true});
-    if (responseFromCache) {
-      return responseFromCache;
-    }
-  
-    // 接下来尝试使用预加载的响应（如果有的话）
-    const preloadResponse = await preloadResponsePromise;
-    if (preloadResponse) {
-      console.info('使用预加载响应', preloadResponse);
-      putInCache(request, preloadResponse.clone());
-      return preloadResponse;
-    }
-  
-    // 接下来尝试从网络获取资源
-    try {
-      const responseFromNetwork = await fetch(request);
-      // 响应只能使用一次
-      // 我们需要保存副本以将一个副本放入缓存
-      // 并提供第二个副本
-      putInCache(request, responseFromNetwork.clone());
-      return responseFromNetwork;
-    } catch (error) {
-      const fallbackResponse = await caches.match(fallbackUrl,{ignoreSearch:true});
-      if (fallbackResponse) {
-        return fallbackResponse;
-      }
-      // 即使连备用响应也不可用，
-      // 我们必须始终返回一个 Response 对象
-      return new Response('网络错误发生', {
-        status: 408,
-        headers: { 'Content-Type': 'text/plain' },
-      });
-    }
-  };
-  
-  const enableNavigationPreload = async () => {
-    if (self.registration.navigationPreload) {
-      // 启用导航预加载
-      await self.registration.navigationPreload.enable();
-    }
-  };
-  
-  // 当服务工作者被激活时执行
-  self.addEventListener('activate', (event) => {
-    event.waitUntil(enableNavigationPreload());
-  });
-  
-  // 当服务工作者被安装时执行
-  self.addEventListener('install', (event) => {
+// LuckyBunny Service Worker
+// 页面走 network-first（保证发版后立刻看到新界面），静态资源走 cache-first（保证离线可看）
+
+const CACHE_VERSION = 'v2';
+const CACHE_NAME = 'luckybunny-' + CACHE_VERSION;
+
+// 安装时预缓存的核心页面
+const PRECACHE = [
+    './',
+    './index.html',
+    './cate.html',
+    './cate_bilibili.html',
+    './manifest.json',
+    './js/httpclient.js'
+];
+
+self.addEventListener('install', (event) => {
     event.waitUntil(
-      addResourcesToCache([
-        '/luckybunny/',
-        '/luckybunny/index.html',
-        '/luckybunny/cate.html',
-        '/luckybunny/cate_bilibili.html',
-        '/luckybunny/app.js',
-      ])
+        caches.open(CACHE_NAME).then((cache) => {
+            // 单个文件缺失不应导致整个 SW 安装失败
+            return Promise.all(
+                PRECACHE.map((url) => cache.add(url).catch(() => { }))
+            );
+        }).then(() => self.skipWaiting())
     );
-  });
-  
-  // 当发出网络请求时执行
-  self.addEventListener('fetch', (event) => {
+});
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+            );
+        }).then(() => self.clients.claim())
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    const request = event.request;
+    if (request.method !== 'GET') return;
+
+    const url = new URL(request.url);
+    // 只处理同源请求，B 站播放器、图片等保持直连
+    if (url.origin !== self.location.origin) return;
+
+    // 页面导航：先走网络，失败再回缓存（避免发版后还看到旧页面）
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                    return response;
+                })
+                .catch(() => caches.match(request, { ignoreSearch: true })
+                    .then((hit) => hit || caches.match('./index.html'))
+                )
+        );
+        return;
+    }
+
+    // 静态资源：缓存优先
     event.respondWith(
-      cacheFirst({
-        request: event.request,
-        preloadResponsePromise: event.preloadResponse,
-        fallbackUrl: '/luckybunny/icons/error.jpg',
-      })
+        caches.match(request, { ignoreSearch: true }).then((hit) => {
+            if (hit) return hit;
+            return fetch(request).then((response) => {
+                const copy = response.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                return response;
+            });
+        })
     );
-  });
+});

@@ -1,124 +1,608 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fbf7f2" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141110" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
     <link rel="icon" type="image/png" href="icons/48.png">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="manifest" href="manifest.json" />
-    <title>故事</title>
-    <script type="text/javascript" src="js/httpclient.js"></script>
+    <link rel="apple-touch-icon" href="icons/192.png">
+    <link rel="manifest" href="manifest.json">
+    <title>故事屋 · LuckyBunny</title>
     <style>
-        .cate-list {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
+        :root {
+            --bg: #fbf7f2;
+            --bg-soft: #f3ece4;
+            --card: #ffffff;
+            --ink: #241d18;
+            --sub: #8b7f76;
+            --line: #efe6dc;
+            --brand: #ff7a3d;
+            --brand-2: #ffb45c;
+            --shadow-sm: 0 2px 10px rgba(120, 80, 40, .08);
+            --safe-t: env(safe-area-inset-top, 0px);
+            --safe-b: env(safe-area-inset-bottom, 0px);
+            --safe-l: env(safe-area-inset-left, 0px);
+            --safe-r: env(safe-area-inset-right, 0px);
         }
 
-        .cate-item {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            text-align: left;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            background-color: white;
-            border-radius: 5px;
-            width: 90%;
-        }
-
-        .cate-item img {
-            width: 30%;
-            height: 90px;
-            margin-right: 10px;
-        }
-
-        .cate-item p {
-            margin: 0;
-            width: 70%;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<script>
-    const registerServiceWorker = async () => {
-  if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register("/js/sw.js", {
-        scope: "/",
-      });
-      if (registration.installing) {
-        console.log("Service worker installing");
-      } else if (registration.waiting) {
-        console.log("Service worker installed");
-      } else if (registration.active) {
-        console.log("Service worker active");
-      }
-    } catch (error) {
-      console.error(`Registration failed with ${error}`);
-    }
-  }
-};
-   registerServiceWorker();
-</script>
-<body>
-    <div id ="cate-list">
-        
-    </div>
-</body>
-<script>
-    makeRequest('GET', "json/cate.json", null, (err, data) => {
-        for (var cate in data){
-            var p = document.createElement("p");
-            p.innerHTML = cate;
-            document.getElementById("cate-list").appendChild(p);
-
-            var list = data[cate];
-            for (var index in list){
-                var item = list[index];
-                var div = document.createElement("div");
-                div.setAttribute("class","cate-list");
-
-                var imgdiv = document.createElement("div");
-                imgdiv.setAttribute("class","cate-item");
-                imgdiv.setAttribute("data-cate-id",item["id"]);
-                imgdiv.setAttribute("data-source", item["source"]);
-
-                var img = document.createElement("img");
-                img.setAttribute("src",item["icon"]);
-                
-                var catName = document.createElement("p");
-                catName.innerHTML = item["name"];
-
-                imgdiv.appendChild(img);
-                imgdiv.appendChild(catName);
-
-                div.appendChild(imgdiv);
-
-                document.getElementById("cate-list").appendChild(div);
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #141110;
+                --bg-soft: #201b17;
+                --card: #1f1a16;
+                --ink: #f4ede4;
+                --sub: #a2948a;
+                --line: #2e2620;
+                --brand: #ff8b52;
+                --brand-2: #ffc078;
+                --shadow-sm: 0 2px 10px rgba(0, 0, 0, .35);
             }
         }
 
-        var cateItems = document.querySelectorAll('.cate-item');
-        cateItems.forEach(function (item) {
-            item.addEventListener('click', function () {
-                var catId = item.getAttribute('data-cate-id');
-                var source = item.getAttribute('data-source');
-                if(source=="bilibili"){
-                  window.location.href="cate_bilibili.html?id="+ catId
-                }else{
-                  window.location.href="cate.html?id="+ catId
-                }
-              
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+                "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+            padding-left: var(--safe-l);
+            padding-right: var(--safe-r);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============ Header ============ */
+        .hero {
+            position: relative;
+            padding: calc(16px + var(--safe-t)) 18px 20px;
+            background: linear-gradient(155deg, #ffe9d5 0%, #ffd8bb 46%, #ffc09b 100%);
+            border-radius: 0 0 26px 26px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero {
+                background: linear-gradient(155deg, #3b2a1e 0%, #33231a 50%, #2a1d16 100%);
+            }
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .hero::before {
+            width: 190px;
+            height: 190px;
+            top: -90px;
+            right: -50px;
+            background: rgba(255, 255, 255, .55);
+        }
+
+        .hero::after {
+            width: 120px;
+            height: 120px;
+            bottom: -70px;
+            left: -30px;
+            background: rgba(255, 122, 61, .26);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero::before {
+                background: rgba(255, 255, 255, .06);
+            }
+
+            .hero::after {
+                background: rgba(255, 122, 61, .18);
+            }
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge {
+            width: 46px;
+            height: 46px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            font-size: 23px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, .82);
+            box-shadow: 0 4px 14px rgba(170, 100, 40, .16);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .badge {
+                background: rgba(255, 255, 255, .1);
+            }
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            line-height: 1.25;
+        }
+
+        .brand-text p {
+            margin-top: 2px;
+            font-size: 12.5px;
+            color: #8a5b33;
+            letter-spacing: .02em;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .brand-text p {
+                color: #c9a88c;
+            }
+        }
+
+        .hero-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #7a4a22;
+            background: rgba(255, 255, 255, .7);
+            border-radius: 999px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero-meta {
+                color: #d7b697;
+                background: rgba(255, 255, 255, .1);
+            }
+        }
+
+        /* ============ 分类快捷导航 ============ */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 14px 16px 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            flex: none;
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--ink);
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            box-shadow: var(--shadow-sm);
+            white-space: nowrap;
+        }
+
+        .tab:active {
+            transform: scale(.96);
+        }
+
+        /* ============ 内容 ============ */
+        .wrap {
+            padding: 4px 16px calc(28px + var(--safe-b));
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .cat-block {
+            margin-top: 20px;
+            scroll-margin-top: 12px;
+        }
+
+        .cat-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-left: 2px;
+        }
+
+        .cat-head .dot {
+            width: 4px;
+            height: 15px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, var(--brand), var(--brand-2));
+        }
+
+        .cat-head h2 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -.01em;
+        }
+
+        .cat-head .count {
+            margin-left: auto;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--sub);
+            background: var(--bg-soft);
+            border-radius: 999px;
+            padding: 2px 9px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 560px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .album {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 7px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            text-align: left;
+            font: inherit;
+            color: inherit;
+            transition: transform .18s cubic-bezier(.2, .8, .3, 1), box-shadow .18s;
+            animation: rise .45s cubic-bezier(.2, .8, .3, 1) both;
+        }
+
+        .album:active {
+            transform: scale(.965);
+        }
+
+        .cover {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f6d3b6, #f0b07e);
+            display: grid;
+            place-items: center;
+            font-size: 26px;
+        }
+
+        .cover img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cover .src {
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: #fff;
+            background: rgba(0, 0, 0, .45);
+            border-radius: 7px;
+            backdrop-filter: blur(4px);
+        }
+
+        .cover .veil {
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, .34), transparent);
+            pointer-events: none;
+        }
+
+        .name {
+            margin: 8px 2px 2px;
+            font-size: 13.5px;
+            font-weight: 700;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 36px;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============ 骨架屏 ============ */
+        .sk {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .sk-card {
+            aspect-ratio: 3 / 4.55;
+            border-radius: 16px;
+            background: linear-gradient(90deg, var(--bg-soft) 25%, #fff 50%, var(--bg-soft) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite linear;
+            opacity: .85;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .sk-card {
+                background: linear-gradient(90deg, #221c18 25%, #2c2521 50%, #221c18 75%);
+                background-size: 200% 100%;
+            }
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 200% 0;
+            }
+
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .state {
+            display: none;
+            padding: 48px 20px;
+            text-align: center;
+            color: var(--sub);
+            font-size: 13.5px;
+        }
+
+        .state .emoji {
+            font-size: 34px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            padding: 6px 16px calc(22px + var(--safe-b));
+            text-align: center;
+            font-size: 11.5px;
+            color: var(--sub);
+            letter-spacing: .02em;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero">
+        <div class="brand">
+            <div class="badge">🐰</div>
+            <div class="brand-text">
+                <h1>故事屋</h1>
+                <p>绘本 · 童话 · 成语 · 国学</p>
+            </div>
+        </div>
+        <div class="hero-meta" id="heroMeta">正在整理故事…</div>
+    </header>
+
+    <nav class="tabs" id="tabs" style="display:none"></nav>
+
+    <main class="wrap" id="app">
+        <div class="sk" id="skeleton">
+            <div class="sk-card"></div>
+            <div class="sk-card"></div>
+            <div class="sk-card"></div>
+            <div class="sk-card"></div>
+        </div>
+        <div class="state" id="state">
+            <span class="emoji">🌙</span>
+            <span id="stateText">故事还在路上，稍后再来看看吧</span>
+        </div>
+    </main>
+
+    <footer>LuckyBunny · 陪孩子慢慢长大</footer>
+
+    <script type="text/javascript" src="js/httpclient.js"></script>
+    <script>
+        // 注册 Service Worker（用于离线可用）
+        (function () {
+            if (!('serviceWorker' in navigator)) return;
+            navigator.serviceWorker.register('js/sw.js').catch(function (e) {
+                console.warn('SW 注册失败：', e);
             });
-        });
-    });
-    
-</script>
+        })();
+
+        (function () {
+            var app = document.getElementById('app');
+            var skeleton = document.getElementById('skeleton');
+            var state = document.getElementById('state');
+            var stateText = document.getElementById('stateText');
+            var heroMeta = document.getElementById('heroMeta');
+            var tabs = document.getElementById('tabs');
+
+            function esc(str) {
+                return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            // https 页面下 http 图片会被拦截，能升级就升级
+            function safeIcon(url) {
+                if (!url) return '';
+                if (location.protocol === 'https:' && /^http:\/\//.test(url)) {
+                    return url.replace(/^http:\/\//, 'https://');
+                }
+                return url;
+            }
+
+            function showState(text) {
+                if (skeleton) skeleton.style.display = 'none';
+                state.style.display = 'block';
+                stateText.textContent = text;
+                heroMeta.textContent = '暂无故事';
+            }
+
+            function render(data) {
+                var frag = document.createDocumentFragment();
+                var tabFrag = document.createDocumentFragment();
+                var cateCount = 0;
+                var albumCount = 0;
+
+                Object.keys(data || {}).forEach(function (cateName, ci) {
+                    var list = data[cateName] || [];
+                    if (!list.length) return;
+                    cateCount++;
+                    albumCount += list.length;
+
+                    var block = document.createElement('section');
+                    block.className = 'cat-block';
+                    block.id = 'cat-' + ci;
+
+                    var head = document.createElement('div');
+                    head.className = 'cat-head';
+                    head.innerHTML = '<span class="dot"></span><h2>' + esc(cateName) +
+                        '</h2><span class="count">' + list.length + ' 个专辑</span>';
+                    block.appendChild(head);
+
+                    var grid = document.createElement('div');
+                    grid.className = 'grid';
+
+                    list.forEach(function (item, i) {
+                        var card = document.createElement('button');
+                        card.className = 'album';
+                        card.type = 'button';
+                        card.style.animationDelay = Math.min(i * 35, 300) + 'ms';
+                        card.setAttribute('aria-label', item.name);
+
+                        var cover = document.createElement('div');
+                        cover.className = 'cover';
+                        cover.innerHTML = '<span>📖</span>';
+
+                        if (item.icon) {
+                            var img = document.createElement('img');
+                            img.src = safeIcon(item.icon);
+                            img.alt = item.name || '';
+                            img.loading = i < 6 ? 'eager' : 'lazy';
+                            img.decoding = 'async';
+                            img.onerror = function () { img.remove(); };
+                            cover.appendChild(img);
+                        }
+
+                        if (item.source === 'bilibili') {
+                            var tag = document.createElement('span');
+                            tag.className = 'src';
+                            tag.textContent = 'B站';
+                            cover.appendChild(tag);
+                        }
+
+                        var veil = document.createElement('span');
+                        veil.className = 'veil';
+                        cover.appendChild(veil);
+
+                        var name = document.createElement('div');
+                        name.className = 'name';
+                        name.textContent = item.name || '未命名专辑';
+
+                        card.appendChild(cover);
+                        card.appendChild(name);
+
+                        card.addEventListener('click', function () {
+                            var target = item.source === 'bilibili' ? 'cate_bilibili.html' : 'cate.html';
+                            window.location.href = target + '?id=' + encodeURIComponent(item.id);
+                        });
+
+                        grid.appendChild(card);
+                    });
+
+                    block.appendChild(grid);
+                    frag.appendChild(block);
+
+                    // 顶部快捷分类
+                    var tab = document.createElement('button');
+                    tab.className = 'tab';
+                    tab.type = 'button';
+                    tab.textContent = cateName;
+                    tab.addEventListener('click', function () {
+                        var el = document.getElementById('cat-' + ci);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
+                    tabFrag.appendChild(tab);
+                });
+
+                skeleton.style.display = 'none';
+                app.insertBefore(frag, state);
+                heroMeta.textContent = cateCount + ' 个分类 · ' + albumCount + ' 个专辑';
+
+                if (!cateCount) {
+                    showState('故事还在路上，稍后再来看看吧');
+                } else {
+                    tabs.appendChild(tabFrag);
+                    tabs.style.display = 'flex';
+                }
+            }
+
+            if (typeof makeRequest !== 'function') {
+                showState('加载脚本失败，请刷新页面重试');
+                return;
+            }
+
+            var done = false;
+            makeRequest('GET', 'json/cate.json', null, function (err, data) {
+                if (done) return;
+                done = true;
+                if (err || !data) return showState('故事加载失败，请下拉刷新重试');
+                render(data);
+            });
+
+            setTimeout(function () {
+                if (!done) showState('加载有点慢，请检查网络后刷新');
+            }, 8000);
+        })();
+    </script>
+</body>
 
 </html>
