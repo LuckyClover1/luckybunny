@@ -1,100 +1,557 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <title>视频播放列表示例</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="text/javascript" src="js/httpclient.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fbf7f2" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141110" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <title>LuckyBunny 故事屋</title>
+    <link rel="preconnect" href="https://vthumb.ykimg.com">
     <style>
-        .cate-list {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
+        :root {
+            --bg: #fbf7f2;
+            --bg-soft: #f3ece4;
+            --card: #ffffff;
+            --ink: #241d18;
+            --sub: #8b7f76;
+            --line: #efe6dc;
+            --brand: #ff7a3d;
+            --brand-2: #ffb45c;
+            --shadow: 0 8px 28px rgba(120, 80, 40, .10);
+            --shadow-sm: 0 2px 10px rgba(120, 80, 40, .07);
+            --safe-t: env(safe-area-inset-top, 0px);
+            --safe-b: env(safe-area-inset-bottom, 0px);
+            --safe-l: env(safe-area-inset-left, 0px);
+            --safe-r: env(safe-area-inset-right, 0px);
         }
 
-        .cate-item {
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #141110;
+                --bg-soft: #201b17;
+                --card: #1f1a16;
+                --ink: #f4ede4;
+                --sub: #a2948a;
+                --line: #2e2620;
+                --brand: #ff8b52;
+                --brand-2: #ffc078;
+                --shadow-sm: 0 2px 10px rgba(0, 0, 0, .35);
+                --shadow: 0 8px 28px rgba(0, 0, 0, .45);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+                "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+            padding-left: var(--safe-l);
+            padding-right: var(--safe-r);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ============ 顶部 Header ============ */
+        .hero {
+            position: relative;
+            padding: calc(16px + var(--safe-t)) 18px 22px;
+            background: linear-gradient(155deg, #ffe9d5 0%, #ffd8bb 46%, #ffc09b 100%);
+            border-radius: 0 0 26px 26px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero {
+                background: linear-gradient(155deg, #3b2a1e 0%, #33231a 50%, #2a1d16 100%);
+            }
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(2px);
+        }
+
+        .hero::before {
+            width: 190px;
+            height: 190px;
+            top: -90px;
+            right: -50px;
+            background: rgba(255, 255, 255, .55);
+        }
+
+        .hero::after {
+            width: 120px;
+            height: 120px;
+            bottom: -70px;
+            left: -30px;
+            background: rgba(255, 122, 61, .28);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero::before {
+                background: rgba(255, 255, 255, .06);
+            }
+
+            .hero::after {
+                background: rgba(255, 122, 61, .18);
+            }
+        }
+
+        .brand {
             display: flex;
             align-items: center;
+            gap: 12px;
+        }
+
+        .badge {
+            width: 46px;
+            height: 46px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, .82);
+            box-shadow: 0 4px 14px rgba(170, 100, 40, .16);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .badge {
+                background: rgba(255, 255, 255, .1);
+            }
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            line-height: 1.25;
+        }
+
+        .brand-text p {
+            margin-top: 2px;
+            font-size: 12.5px;
+            color: #8a5b33;
+            letter-spacing: .02em;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .brand-text p {
+                color: #c9a88c;
+            }
+        }
+
+        .hero-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #7a4a22;
+            background: rgba(255, 255, 255, .7);
+            border-radius: 999px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .hero-meta {
+                color: #d7b697;
+                background: rgba(255, 255, 255, .1);
+            }
+        }
+
+        /* ============ 内容区 ============ */
+        .wrap {
+            padding: 6px 16px calc(28px + var(--safe-b));
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .cat-block {
+            margin-top: 20px;
+        }
+
+        .cat-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-left: 2px;
+        }
+
+        .cat-head h2 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -.01em;
+        }
+
+        .cat-head .dot {
+            width: 4px;
+            height: 15px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, var(--brand), var(--brand-2));
+        }
+
+        .cat-head .count {
+            margin-left: auto;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--sub);
+            background: var(--bg-soft);
+            border-radius: 999px;
+            padding: 2px 9px;
+        }
+
+        .cat-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 10px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
             text-align: left;
-            padding: 10px;
-            border: 1px solid #ccc;
+            font: inherit;
+            color: inherit;
+            transition: transform .18s cubic-bezier(.2, .8, .3, 1), box-shadow .18s;
+            animation: rise .45s cubic-bezier(.2, .8, .3, 1) both;
+        }
+
+        .card:active {
+            transform: scale(.975);
+            box-shadow: 0 1px 6px rgba(120, 80, 40, .08);
+        }
+
+        .thumb {
+            position: relative;
+            width: 74px;
+            height: 74px;
+            flex: none;
+            border-radius: 14px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--brand-2), var(--brand));
+            display: grid;
+            place-items: center;
+            font-size: 26px;
+        }
+
+        .thumb img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .title {
+            font-size: 15.5px;
+            font-weight: 700;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .sub {
+            margin-top: 4px;
+            font-size: 12.5px;
+            color: var(--sub);
+        }
+
+        .chev {
+            width: 30px;
+            height: 30px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: var(--brand);
+            background: var(--bg-soft);
+        }
+
+        .chev svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============ 骨架屏 ============ */
+        .sk {
+            margin-top: 20px;
+        }
+
+        .sk-line {
+            height: 15px;
+            width: 96px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .sk-card {
+            height: 94px;
+            border-radius: 18px;
             margin-bottom: 10px;
-            background-color: white;
-            border-radius: 5px;
-            width: 90%;
         }
 
-        .cate-item img {
-            width: 30%;
-            height: 90px;
-            margin-right: 10px;
+        .sk-line,
+        .sk-card {
+            background: linear-gradient(90deg, var(--bg-soft) 25%, #fff 50%, var(--bg-soft) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite linear;
+            opacity: .85;
         }
 
-        .cate-item p {
-            margin: 0;
-            width: 70%;
-            font-size: 16px;
+        @media (prefers-color-scheme: dark) {
+
+            .sk-line,
+            .sk-card {
+                background: linear-gradient(90deg, #221c18 25%, #2c2521 50%, #221c18 75%);
+                background-size: 200% 100%;
+            }
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 200% 0;
+            }
+
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        /* ============ 空/错误态 ============ */
+        .state {
+            display: none;
+            padding: 48px 20px;
+            text-align: center;
+            color: var(--sub);
+            font-size: 13.5px;
+        }
+
+        .state .emoji {
+            font-size: 34px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            padding: 8px 0 calc(20px + var(--safe-b));
+            text-align: center;
+            font-size: 11.5px;
+            color: var(--sub);
+            letter-spacing: .02em;
         }
     </style>
 </head>
 
 <body>
-    <div id ="cate-list">
-        
-    </div>
-</body>
-<script>
-    makeRequest('GET', "json/cate.json", null, (err, data) => {
-        for (var cate in data){
-            var p = document.createElement("p");
-            p.innerHTML = cate;
-            document.getElementById("cate-list").appendChild(p);
+    <header class="hero">
+        <div class="brand">
+            <div class="badge">🐰</div>
+            <div class="brand-text">
+                <h1>LuckyBunny 故事屋</h1>
+                <p>绘本 · 童话 · 睡前故事</p>
+            </div>
+        </div>
+        <div class="hero-meta" id="heroMeta">正在整理故事…</div>
+    </header>
 
-            var list = data[cate];
-            for (var index in list){
-                var item = list[index];
-                var div = document.createElement("div");
-                div.setAttribute("class","cate-list");
+    <main class="wrap" id="app">
+        <div class="sk" id="skeleton">
+            <div class="sk-line"></div>
+            <div class="sk-card"></div>
+            <div class="sk-card"></div>
+            <div class="sk-line"></div>
+            <div class="sk-card"></div>
+        </div>
+        <div class="state" id="state">
+            <span class="emoji">🌙</span>
+            <span id="stateText">故事还在路上，稍后再来看看吧</span>
+        </div>
+    </main>
 
-                var imgdiv = document.createElement("div");
-                imgdiv.setAttribute("class","cate-item");
-                imgdiv.setAttribute("data-cate-id",item["id"]);
+    <footer>LuckyBunny · 陪孩子慢慢长大</footer>
 
-                var img = document.createElement("img");
-                img.setAttribute("src",item["icon"]);
-                
-                var catName = document.createElement("p");
-                catName.innerHTML = item["name"];
+    <script type="text/javascript" src="js/httpclient.js"></script>
+    <script>
+        (function () {
+            var app = document.getElementById('app');
+            var skeleton = document.getElementById('skeleton');
+            var state = document.getElementById('state');
+            var stateText = document.getElementById('stateText');
+            var heroMeta = document.getElementById('heroMeta');
 
-                imgdiv.appendChild(img);
-                imgdiv.appendChild(catName);
-
-                div.appendChild(imgdiv);
-
-                document.getElementById("cate-list").appendChild(div);
+            function esc(str) {
+                return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
             }
-            
-        }
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var cateItems = document.querySelectorAll('.cate-item');
-        cateItems.forEach(function (item) {
-            item.addEventListener('click', function () {
-                var catId = item.getAttribute('data-cate-id');
-                window.location.href="cate.html?id="+ catId
+            function safeIcon(url) {
+                // GitHub Pages 为 https，http 图片会被浏览器拦截，这里能升级就升级
+                if (!url) return '';
+                if (location.protocol === 'https:' && /^http:\/\//.test(url)) {
+                    return url.replace(/^http:\/\//, 'https://');
+                }
+                return url;
+            }
+
+            function showState(text) {
+                skeleton.style.display = 'none';
+                state.style.display = 'block';
+                stateText.textContent = text;
+                heroMeta.textContent = '暂无故事';
+            }
+
+            function render(data) {
+                var frag = document.createDocumentFragment();
+                var cateCount = 0;
+                var mediaCount = 0;
+
+                Object.keys(data || {}).forEach(function (cateName) {
+                    var list = data[cateName] || [];
+                    if (!list.length) return;
+                    cateCount++;
+                    mediaCount += list.length;
+
+                    var block = document.createElement('section');
+                    block.className = 'cat-block';
+
+                    var head = document.createElement('div');
+                    head.className = 'cat-head';
+                    head.innerHTML = '<span class="dot"></span><h2>' + esc(cateName) +
+                        '</h2><span class="count">' + list.length + ' 个专辑</span>';
+                    block.appendChild(head);
+
+                    var wrapList = document.createElement('div');
+                    wrapList.className = 'cat-list';
+
+                    list.forEach(function (item, i) {
+                        var btn = document.createElement('button');
+                        btn.className = 'card';
+                        btn.type = 'button';
+                        btn.style.animationDelay = (i * 60) + 'ms';
+                        btn.setAttribute('aria-label', item.name);
+
+                        var thumb = document.createElement('div');
+                        thumb.className = 'thumb';
+                        thumb.innerHTML = '<span>📖</span>';
+                        if (item.icon) {
+                            var img = document.createElement('img');
+                            img.src = safeIcon(item.icon);
+                            img.alt = item.name || '';
+                            img.loading = 'lazy';
+                            img.decoding = 'async';
+                            img.onerror = function () { img.remove(); };
+                            thumb.appendChild(img);
+                        }
+
+                        var body = document.createElement('div');
+                        body.className = 'body';
+                        body.innerHTML = '<div class="title">' + esc(item.name) +
+                            '</div><div class="sub">点击进入，边看边听</div>';
+
+                        var chev = document.createElement('span');
+                        chev.className = 'chev';
+                        chev.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
+                        btn.appendChild(thumb);
+                        btn.appendChild(body);
+                        btn.appendChild(chev);
+
+                        btn.addEventListener('click', function () {
+                            window.location.href = 'cate.html?id=' + encodeURIComponent(item.id);
+                        });
+
+                        wrapList.appendChild(btn);
+                    });
+
+                    block.appendChild(wrapList);
+                    frag.appendChild(block);
+                });
+
+                skeleton.remove();
+                app.appendChild(frag);
+                heroMeta.textContent = cateCount + ' 个分类 · ' + mediaCount + ' 个专辑';
+
+                if (!cateCount) showState('故事还在路上，稍后再来看看吧');
+            }
+
+            if (typeof makeRequest !== 'function') {
+                showState('加载脚本失败，请刷新页面重试');
+                return;
+            }
+
+            var done = false;
+            makeRequest('GET', 'json/cate.json', null, function (err, data) {
+                if (done) return;
+                done = true;
+                if (err || !data) return showState('故事加载失败，请下拉刷新重试');
+                render(data);
             });
-        });
-    });
-    
-</script>
+
+            // 兜底：8 秒还没返回则提示
+            setTimeout(function () {
+                if (!done) showState('加载有点慢，请检查网络后刷新');
+            }, 8000);
+        })();
+    </script>
+</body>
 
 </html>
