@@ -2,13 +2,13 @@
     "绘本故事": [
         {
             "name": "中国民间故事",
-            "icon": "https://raw.githubusercontent.com/LuckyClover1/luckybunny/refs/heads/release/docs/images/dxB35DL7t0MeKk2A7Q6k9p7AaCSL0SDulcqxmOFHbgnA91522582697213compressflag.jpg",
+            "icon": "images/dxB35DL7t0MeKk2A7Q6k9p7AaCSL0SDulcqxmOFHbgnA91522582697213compressflag.jpg",
             "source": "bilibili",
             "id": 100005
         },
         {
             "name": "猫小帅睡前故事",
-            "icon": "https://raw.githubusercontent.com/LuckyClover1/luckybunny/refs/heads/release/docs/images/79f0f736afc3793186aad028e1c4b74542a911f4.webp",
+            "icon": "images/79f0f736afc3793186aad028e1c4b74542a911f4.webp",
             "source": "bilibili",
             "id": 100004
         },
@@ -32,24 +32,24 @@
         },
         {
             "name": "贝乐虎绘本故事",
-            "icon": "http://xiaji1.oss-cn-hangzhou.aliyuncs.com/Guoxue/bellehuhuiben.jpg",
+            "icon": "https://vthumb.ykimg.com/054101015D1D9574ADD0169D4D51A768",
             "id": 82
         }
     ],
     "其他故事": [
         {
             "name": "贝乐虎故事",
-            "icon": "http://xiaji1.oss-cn-hangzhou.aliyuncs.com/Xin/beilehugushi.jpg",
+            "icon": "https://vthumb.ykimg.com/0541010157AB4E116A0A4204E3D63C0B",
             "id": 11
         },
         {
             "name": "熊孩子经典故事",
-            "icon": "http://xiaji1.oss-cn-hangzhou.aliyuncs.com/Image/xionghaizigushi.jpg",
+            "icon": "https://vthumb.ykimg.com/054101015B5537FAADD016A740C91A79",
             "id": 13
         },
         {
             "name": "贝乐虎三字经",
-            "icon": "http://xiaji1.oss-cn-hangzhou.aliyuncs.com/Guoxue/beilehusanzijing.jpg",
+            "icon": "https://vthumb.ykimg.com/054101015C1C891FADC95BA5A4BC25DC",
             "id": 1450
         }
     ]
