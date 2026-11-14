@@ -1,136 +1,674 @@
-<!-- <html>
-    <video width="320" height="240" controls>
-        <source src="http://poerty.wuqiongda8888.com/lemengduogushi/9.mp4" type="video/mp4">
-    </video><br>
-    <video width="320" height="240" controls>
-        <source src="http://res1.ubestkid.com/blk/m/006001_wmzk.mp4" type="video/mp4">
-    </video>
-</html> -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <script type="text/javascript" src="js/httpclient.js"></script>
-    <title>视频播放列表示例</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fbf7f2" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141110" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>故事播放 · LuckyBunny</title>
     <style>
-        body {
-            display: flex;
-            align-items: left;
-            flex-direction: column;
-            height: 100vh;
-            width: 100%;
+        :root {
+            --bg: #fbf7f2;
+            --bg-soft: #f3ece4;
+            --card: #ffffff;
+            --ink: #241d18;
+            --sub: #8b7f76;
+            --line: #efe6dc;
+            --brand: #ff7a3d;
+            --brand-2: #ffb45c;
+            --shadow-sm: 0 2px 10px rgba(120, 80, 40, .07);
+            --safe-t: env(safe-area-inset-top, 0px);
+            --safe-b: env(safe-area-inset-bottom, 0px);
+            --safe-l: env(safe-area-inset-left, 0px);
+            --safe-r: env(safe-area-inset-right, 0px);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #141110;
+                --bg-soft: #201b17;
+                --card: #1f1a16;
+                --ink: #f4ede4;
+                --sub: #a2948a;
+                --line: #2e2620;
+                --brand: #ff8b52;
+                --brand-2: #ffc078;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            background-color: #f0f0f0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .container {
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+                "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+            padding-left: var(--safe-l);
+            padding-right: var(--safe-r);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ============ 吸顶：返回栏 + 播放器 ============ */
+        .sticky {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            padding-top: var(--safe-t);
+            background: var(--bg);
+            border-bottom: 1px solid transparent;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .sticky.scrolled {
+            border-bottom-color: var(--line);
+            box-shadow: 0 6px 18px rgba(90, 60, 30, .06);
+        }
+
+        .topbar {
             display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px 8px;
+        }
+
+        .back {
+            width: 36px;
+            height: 36px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--line);
+            background: var(--card);
+            border-radius: 12px;
+            color: var(--ink);
+            transition: transform .16s;
+        }
+
+        .back:active {
+            transform: scale(.92);
+        }
+
+        .back svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .titles {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .titles h1 {
+            font-size: 15.5px;
+            font-weight: 800;
+            letter-spacing: -.01em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .titles p {
+            font-size: 11.5px;
+            color: var(--sub);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .now-badge {
+            flex: none;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        }
+
+        /* ============ 播放器 ============ */
+        .player-box {
+            padding: 2px 14px 12px;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .player {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #0b0908;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(40, 25, 10, .16);
+        }
+
+        .player video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #0b0908;
+        }
+
+        .video-fallback {
+            position: absolute;
+            inset: 0;
+            display: none;
             flex-direction: column;
             align-items: center;
-            width: 100%;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #e9dccd;
+            font-size: 12.5px;
+            line-height: 1.6;
+            background: radial-gradient(circle at 50% 30%, #2a221c 0%, #100c09 100%);
         }
 
-        .video-container {
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .video-list {
+        .video-fallback.show {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
         }
 
-        .video-item {
+        .video-fallback .ico {
+            font-size: 26px;
+        }
+
+        .retry {
+            margin-top: 4px;
+            padding: 8px 18px;
+            min-height: 34px;
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: inherit;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        }
+
+        .retry:active {
+            filter: brightness(.92);
+        }
+
+        /* ============ 列表 ============ */
+        .wrap {
+            padding: 0 14px calc(26px + var(--safe-b));
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .list-head {
             display: flex;
             align-items: center;
+            gap: 8px;
+            padding: 14px 2px 10px;
+        }
+
+        .list-head .dot {
+            width: 4px;
+            height: 15px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, var(--brand), var(--brand-2));
+        }
+
+        .list-head h2 {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .list-head .count {
+            margin-left: auto;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--sub);
+            background: var(--bg-soft);
+            border-radius: 999px;
+            padding: 2px 9px;
+        }
+
+        .list {
+            display: grid;
+            gap: 9px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            width: 100%;
+            padding: 8px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
             text-align: left;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            background-color: white;
-            border-radius: 5px;
+            font: inherit;
+            color: inherit;
+            transition: transform .16s cubic-bezier(.2, .8, .3, 1), border-color .2s, background .2s;
+            animation: rise .4s cubic-bezier(.2, .8, .3, 1) both;
+        }
+
+        .row:active {
+            transform: scale(.975);
+        }
+
+        .row.active {
+            border-color: rgba(255, 122, 61, .55);
+            background: linear-gradient(180deg, rgba(255, 180, 92, .10), rgba(255, 122, 61, .06));
+        }
+
+        .row .thumb {
+            position: relative;
+            width: 104px;
+            aspect-ratio: 16 / 9;
+            flex: none;
+            border-radius: 11px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #3a2a20, #1a1310);
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+        }
+
+        .row .thumb img {
+            position: absolute;
+            inset: 0;
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .video-item img {
-            width: 30%;
-            height: 90px;
-            margin-right: 10px;
+        .row .play-mask {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            background: rgba(0, 0, 0, .16);
+            transition: background .2s;
         }
 
-        .video-item p {
-            margin: 0;
-            width: 70%;
-            font-size: 16px;
+        .row.active .play-mask {
+            display: none;
+        }
+
+        .row .play-mask svg {
+            width: 26px;
+            height: 26px;
+            color: #fff;
+            filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .5));
+        }
+
+        .row .info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .row .idx {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--sub);
+            letter-spacing: .06em;
+        }
+
+        .row .name {
+            margin-top: 2px;
+            font-size: 14.5px;
+            font-weight: 700;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .row.active .name {
+            color: var(--brand);
+        }
+
+        .eq {
+            display: none;
+            align-items: flex-end;
+            gap: 2px;
+            height: 11px;
+            margin-left: 6px;
+            vertical-align: -2px;
+        }
+
+        .row.active .eq {
+            display: inline-flex;
+        }
+
+        .eq i {
+            display: block;
+            width: 2.5px;
+            background: var(--brand);
+            border-radius: 2px;
+            animation: eq .9s infinite ease-in-out;
+        }
+
+        .eq i:nth-child(1) {
+            height: 55%;
+            animation-delay: -.9s;
+        }
+
+        .eq i:nth-child(2) {
+            height: 100%;
+            animation-delay: -.45s;
+        }
+
+        .eq i:nth-child(3) {
+            height: 70%;
+            animation-delay: -.2s;
+        }
+
+        @keyframes eq {
+
+            0%,
+            100% {
+                transform: scaleY(.55);
+            }
+
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============ 骨架屏 / 空态 ============ */
+        .sk {
+            padding: 16px 0 6px;
+        }
+
+        .sk-row {
+            height: 74px;
+            border-radius: 16px;
+            margin-bottom: 9px;
+            background: linear-gradient(90deg, var(--bg-soft) 25%, #fff 50%, var(--bg-soft) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite linear;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .sk-row {
+                background: linear-gradient(90deg, #221c18 25%, #2c2521 50%, #221c18 75%);
+                background-size: 200% 100%;
+            }
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 200% 0;
+            }
+
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .state {
+            display: none;
+            padding: 54px 24px;
+            text-align: center;
+            color: var(--sub);
+            font-size: 13.5px;
+        }
+
+        .state .emoji {
+            font-size: 34px;
+            display: block;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 
 <body>
-    <div style="float: left;"><a href="index.html">&lt;&lt;返回</a></div>
-    <div class="container">
-        <!-- 顶部视频播放窗口 -->
-        <div class="video-container">
-            <video id="mainVideo" width="100%" controls>
-                <source id="mainVideoSource" src="path/to/yourvideo1.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+    <div class="sticky" id="sticky">
+        <div class="topbar">
+            <a class="back" href="index.html" aria-label="返回列表">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </a>
+            <div class="titles">
+                <h1 id="pageTitle">故事专辑</h1>
+                <p id="pageSub">加载中…</p>
+            </div>
+            <span class="now-badge" id="nowBadge" style="display:none">播放中</span>
         </div>
-        <!-- 下方视频列表 -->
-        <div class="video-list" id ="mediaList">
-            <!-- <div class="video-item" data-video-src="http://poerty.wuqiongda8888.com/lemengduogushi/9.mp4">
-                <img src="https://vthumb.ykimg.com/054101015D1D974F15673C8C7208311A" alt="Video 1 Thumbnail">
-                <p>视频 1</p>
-            </div> -->
-            <!-- 可以根据需要添加更多视频项 -->
+
+        <div class="player-box">
+            <div class="player">
+                <video id="mainVideo" controls playsinline webkit-playsinline x5-playsinline
+                    preload="metadata" poster=""></video>
+                <div class="video-fallback" id="videoFallback">
+                    <span class="ico">🎬</span>
+                    <span id="fallbackText">视频暂时无法播放<br>可能是故事源已失效，请换一集试试</span>
+                    <button class="retry" id="retryBtn" type="button">重新加载</button>
+                </div>
+            </div>
         </div>
     </div>
-</body>
-<script>
-    var cateId=new URLSearchParams(window.location.href).get("id");
-    makeRequest('GET', "json/media-"+cateId+".json", null, (err, data) => {
 
-        var list = document.getElementById("mediaList");
-        for (var media in data){
-            var item = document.createElement("div");
-            item.setAttribute("class", "video-item");
-            item.setAttribute("data-video-src", media["videoUrl"]);
+    <main class="wrap">
+        <div class="list-head">
+            <span class="dot"></span>
+            <h2>全部故事</h2>
+            <span class="count" id="listCount">…</span>
+        </div>
+        <div class="list" id="mediaList">
+            <div class="sk" id="skeleton">
+                <div class="sk-row"></div>
+                <div class="sk-row"></div>
+                <div class="sk-row"></div>
+                <div class="sk-row"></div>
+            </div>
+        </div>
+        <div class="state" id="state">
+            <span class="emoji">🌙</span>
+            <span id="stateText">这个专辑的故事还没上线</span>
+        </div>
+    </main>
 
-            var img = document.createElement("img");
-            img.setAttribute("src", media["icon"]);
-            item.appendChild(img);
+    <script type="text/javascript" src="js/httpclient.js"></script>
+    <script>
+        (function () {
+            var cateId = new URLSearchParams(window.location.search).get('id') || '';
+            var mediaList = document.getElementById('mediaList');
+            var skeleton = document.getElementById('skeleton');
+            var state = document.getElementById('state');
+            var stateText = document.getElementById('stateText');
+            var pageTitle = document.getElementById('pageTitle');
+            var pageSub = document.getElementById('pageSub');
+            var listCount = document.getElementById('listCount');
+            var nowBadge = document.getElementById('nowBadge');
+            var mainVideo = document.getElementById('mainVideo');
+            var fallback = document.getElementById('videoFallback');
+            var sticky = document.getElementById('sticky');
 
-            var p = document.createElement("p");
-            p.innerHTML = media["name"];
-            item.appendChild(p);
+            var items = [];
+            var current = -1;
 
-            list.appendChild(item);
-        }
-    })
+            function esc(str) {
+                return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var mainVideo = document.getElementById('mainVideo');
-        var mainVideoSource = document.getElementById('mainVideoSource');
-        var videoItems = document.querySelectorAll('.video-item');
+            function safeIcon(url) {
+                if (!url) return '';
+                if (location.protocol === 'https:' && /^http:\/\//.test(url)) {
+                    return url.replace(/^http:\/\//, 'https://');
+                }
+                return url;
+            }
 
-        videoItems.forEach(function (item) {
-            item.addEventListener('click', function () {
-                var newVideoSrc = item.getAttribute('data-video-src');
-                mainVideoSource.src = newVideoSrc;
+            // 滚动时给吸顶栏加阴影
+            window.addEventListener('scroll', function () {
+                sticky.classList.toggle('scrolled', window.scrollY > 4);
+            }, { passive: true });
+
+            function play(index, shouldPlay) {
+                if (index < 0 || index >= items.length) return;
+                current = index;
+                var item = items[index];
+                mainVideo.src = item.videoUrl;
+                if (item.icon) mainVideo.setAttribute('poster', safeIcon(item.icon));
+                fallback.classList.remove('show');
                 mainVideo.load();
-                mainVideo.play();
+
+                nowBadge.style.display = 'none';
+                pageSub.textContent = '正在播放 · 第 ' + (index + 1) + ' / ' + items.length + ' 集';
+
+                mediaList.querySelectorAll('.row').forEach(function (row, i) {
+                    row.classList.toggle('active', i === index);
+                });
+
+                if (shouldPlay) {
+                    var p = mainVideo.play();
+                    if (p && p.catch) p.catch(function () { /* 自动播放被拦截时不处理 */ });
+                }
+            }
+
+            function render(data) {
+                items = data;
+                var frag = document.createDocumentFragment();
+
+                data.forEach(function (item, i) {
+                    var row = document.createElement('button');
+                    row.className = 'row';
+                    row.type = 'button';
+                    row.style.animationDelay = Math.min(i * 45, 360) + 'ms';
+                    row.setAttribute('aria-label', item.name);
+
+                    var thumb = document.createElement('div');
+                    thumb.className = 'thumb';
+                    if (item.icon) {
+                        var img = document.createElement('img');
+                        img.src = safeIcon(item.icon);
+                        img.alt = item.name || '';
+                        img.loading = i < 3 ? 'eager' : 'lazy';
+                        img.decoding = 'async';
+                        img.onerror = function () { img.style.display = 'none'; };
+                        thumb.appendChild(img);
+                    }
+                    var mask = document.createElement('span');
+                    mask.className = 'play-mask';
+                    mask.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.55.84l9.6-6.5a1 1 0 0 0 0-1.68l-9.6-6.5A1 1 0 0 0 8 5.5z"/></svg>';
+                    thumb.appendChild(mask);
+
+                    var info = document.createElement('div');
+                    info.className = 'info';
+                    info.innerHTML =
+                        '<div class="idx"><span>EP ' + (i + 1) + '</span>' +
+                        '<span class="eq"><i></i><i></i><i></i></span></div>' +
+                        '<div class="name">' + esc(item.name) + '</div>';
+
+                    row.appendChild(thumb);
+                    row.appendChild(info);
+
+                    row.addEventListener('click', function () { play(i, true); });
+
+                    frag.appendChild(row);
+                });
+
+                skeleton.style.display = 'none';
+                mediaList.appendChild(frag);
+                listCount.textContent = data.length + ' 集';
+
+                // 默认加载第一集，但不自动播放（移动端会自动播放被拦截）
+                play(0, false);
+            }
+
+            function showState(text) {
+                if (skeleton) skeleton.style.display = 'none';
+                state.style.display = 'block';
+                stateText.textContent = text;
+                listCount.textContent = '0 集';
+                pageSub.textContent = '暂无内容';
+            }
+
+            mainVideo.addEventListener('error', function () {
+                nowBadge.style.display = 'none';
+                fallback.classList.add('show');
             });
-        });
-    });
-</script>
+            mainVideo.addEventListener('playing', function () {
+                fallback.classList.remove('show');
+                nowBadge.style.display = 'inline-block';
+            });
+            mainVideo.addEventListener('pause', function () {
+                nowBadge.style.display = 'none';
+            });
+            document.getElementById('retryBtn').addEventListener('click', function () {
+                fallback.classList.remove('show');
+                mainVideo.load();
+                var p = mainVideo.play();
+                if (p && p.catch) p.catch(function () { });
+            });
+
+            if (typeof makeRequest !== 'function') {
+                showState('加载脚本失败，请刷新页面重试');
+                return;
+            }
+
+            // 用分类 JSON 反查当前分类名称
+            makeRequest('GET', 'json/cate.json', null, function (err, data) {
+                if (err || !data) return;
+                Object.keys(data).forEach(function (name) {
+                    (data[name] || []).forEach(function (c) {
+                        if (String(c.id) === String(cateId)) pageTitle.textContent = name;
+                    });
+                });
+            });
+
+            var done = false;
+            makeRequest('GET', 'json/media-' + encodeURIComponent(cateId) + '.json', null, function (err, data) {
+                if (done) return;
+                done = true;
+                if (err || !data || !data.length) return showState('这个专辑的故事还没上线');
+                render(data);
+            });
+
+            setTimeout(function () {
+                if (!done) showState('加载有点慢，请检查网络后刷新');
+            }, 8000);
+        })();
+    </script>
+</body>
 
 </html>
