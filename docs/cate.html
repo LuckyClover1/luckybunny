@@ -455,6 +455,152 @@
             display: block;
             margin-bottom: 10px;
         }
+
+        /* ============ 连播开关 / 提示条 ============ */
+        .auto-btn {
+            flex: none;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: inherit;
+            letter-spacing: .02em;
+            color: var(--sub);
+            background: var(--bg-soft);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            transition: color .18s, background .18s, border-color .18s;
+        }
+
+        .auto-btn.on {
+            color: #fff;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: calc(18px + var(--safe-b));
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: min(92vw, 460px);
+            padding: 9px 15px;
+            font-size: 12.5px;
+            line-height: 1.35;
+            color: #fff;
+            background: rgba(36, 29, 24, .92);
+            border-radius: 999px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+            opacity: 0;
+            transform: translate(-50%, 14px);
+            pointer-events: none;
+            transition: opacity .22s, transform .22s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+            pointer-events: auto;
+        }
+
+        .toast button {
+            flex: none;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: inherit;
+            color: #241d18;
+            background: #fff;
+            border: none;
+            border-radius: 999px;
+        }
+
+        /* ============ 横屏：左播放器 + 右选集 ============ */
+        @media (orientation: landscape) and (max-height: 520px) {
+
+            html,
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .sticky {
+                position: relative;
+                top: auto;
+                flex: 1 1 62%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 100%;
+                padding: 8px calc(8px + var(--safe-r)) 8px calc(10px + var(--safe-l));
+                border-bottom: none;
+                box-shadow: none;
+            }
+
+            .sticky.scrolled {
+                border-bottom-color: transparent;
+                box-shadow: none;
+            }
+
+            .topbar {
+                padding: 0 0 6px;
+            }
+
+            .titles h1 {
+                font-size: 13.5px;
+            }
+
+            .player-box {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                margin: 0;
+                max-width: none;
+            }
+
+            .player {
+                width: 100%;
+                max-width: calc((100vh - 96px) * 16 / 9);
+                margin: 0 auto;
+                border-radius: 12px;
+            }
+
+            .wrap {
+                flex: 0 0 38%;
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 8px calc(10px + var(--safe-r)) 14px calc(8px + var(--safe-l));
+                max-width: none;
+                border-left: 1px solid var(--line);
+            }
+
+            .list-head {
+                padding: 0 2px 8px;
+            }
+
+            .row {
+                padding: 6px;
+            }
+
+            .row .thumb {
+                width: 84px;
+            }
+
+            .row .name {
+                font-size: 13.5px;
+            }
+        }
     </style>
 </head>
 
@@ -491,6 +637,7 @@
         <div class="list-head">
             <span class="dot"></span>
             <h2>全部故事</h2>
+            <button class="auto-btn on" id="autoBtn" type="button" aria-pressed="true">连播 开</button>
             <span class="count" id="listCount">…</span>
         </div>
         <div class="list" id="mediaList">
@@ -506,6 +653,8 @@
             <span id="stateText">这个专辑的故事还没上线</span>
         </div>
     </main>
+
+    <div class="toast" id="toast"></div>
 
     <script type="text/javascript" src="js/httpclient.js"></script>
     <script>
@@ -528,8 +677,60 @@
             var mainVideo = document.getElementById('mainVideo');
             var fallback = document.getElementById('videoFallback');
             var sticky = document.getElementById('sticky');
+            var autoBtn = document.getElementById('autoBtn');
+            var toast = document.getElementById('toast');
 
             var items = [];
+            var curIndex = -1;
+
+            // 连播开关：记住上次选择
+            var autoOn = true;
+            try {
+                autoOn = localStorage.getItem('luckbunny:autoplay') !== '0';
+            } catch (e) { }
+
+            var toastTimer = null;
+
+            function hideToast() {
+                toast.classList.remove('show');
+            }
+
+            function showToast(text, actionLabel, action) {
+                toast.textContent = '';
+                var span = document.createElement('span');
+                span.textContent = text;
+                toast.appendChild(span);
+                if (actionLabel) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = actionLabel;
+                    btn.addEventListener('click', function () {
+                        hideToast();
+                        if (action) action();
+                    });
+                    toast.appendChild(btn);
+                }
+                toast.classList.add('show');
+                if (toastTimer) clearTimeout(toastTimer);
+                if (!actionLabel) toastTimer = setTimeout(hideToast, 2600);
+            }
+
+            function syncAutoBtn() {
+                autoBtn.classList.toggle('on', autoOn);
+                autoBtn.setAttribute('aria-pressed', autoOn ? 'true' : 'false');
+                autoBtn.textContent = '连播 ' + (autoOn ? '开' : '关');
+            }
+
+            autoBtn.addEventListener('click', function () {
+                autoOn = !autoOn;
+                try {
+                    localStorage.setItem('luckbunny:autoplay', autoOn ? '1' : '0');
+                } catch (e) { }
+                syncAutoBtn();
+                showToast('连播已' + (autoOn ? '开启' : '关闭'));
+            });
+
+            syncAutoBtn();
 
             function esc(str) {
                 return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
@@ -552,6 +753,7 @@
             function play(index, shouldPlay) {
                 if (index < 0 || index >= items.length) return;
                 var item = items[index];
+                curIndex = index;
                 mainVideo.src = safeUrl(item.videoUrl);
                 if (item.icon) mainVideo.setAttribute('poster', safeUrl(item.icon));
                 fallback.classList.remove('show');
@@ -567,8 +769,21 @@
                 });
 
                 if (shouldPlay) {
+                    var act = mediaList.querySelector('.row.active');
+                    if (act && act.scrollIntoView) {
+                        act.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+                    }
                     var p = mainVideo.play();
-                    if (p && p.catch) p.catch(function () { });
+                    if (p && p.catch) {
+                        p.catch(function () {
+                            // 源本身失效时交给 error 兜底，不重复提示
+                            if (mainVideo.error) return;
+                            // iOS/Safari 可能拦截非手势触发的播放，给一个按钮兜底
+                            showToast('浏览器拦截了自动播放', '继续播放', function () {
+                                play(index, true);
+                            });
+                        });
+                    }
                 }
             }
 
@@ -638,6 +853,24 @@
             mainVideo.addEventListener('pause', function () {
                 nowBadge.style.display = 'none';
             });
+
+            // 本集播完，自动接下一集
+            mainVideo.addEventListener('ended', function () {
+                nowBadge.style.display = 'none';
+                if (!items.length) return;
+                if (!autoOn) {
+                    showToast('第 ' + (curIndex + 1) + ' 集播放完毕');
+                    return;
+                }
+                if (curIndex >= items.length - 1) {
+                    showToast('全部 ' + items.length + ' 集都听完啦 🌙');
+                    return;
+                }
+                var next = curIndex + 1;
+                showToast('即将播放第 ' + (next + 1) + ' 集');
+                play(next, true);
+            });
+
             document.getElementById('retryBtn').addEventListener('click', function () {
                 fallback.classList.remove('show');
                 mainVideo.load();
