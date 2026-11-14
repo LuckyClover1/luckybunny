@@ -421,6 +421,77 @@
             color: var(--sub);
             letter-spacing: .02em;
         }
+
+        /* ============ 横屏：压缩头部、放宽列数 ============ */
+        @media (orientation: landscape) and (max-height: 520px) {
+
+            .hero {
+                padding: calc(12px + var(--safe-t)) calc(20px + var(--safe-r)) 14px calc(20px + var(--safe-l));
+                border-radius: 0 0 20px 20px;
+            }
+
+            .brand {
+                gap: 10px;
+            }
+
+            .badge {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+            }
+
+            .badge img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .brand-text h1 {
+                font-size: 17px;
+            }
+
+            .brand-text p {
+                font-size: 11.5px;
+            }
+
+            .hero-meta {
+                margin-top: 8px;
+                padding: 4px 10px;
+                font-size: 11.5px;
+            }
+
+            .tabs {
+                max-width: 960px;
+                padding: 10px calc(20px + var(--safe-r)) 2px calc(20px + var(--safe-l));
+            }
+
+            .wrap {
+                max-width: 960px;
+                padding: 4px calc(20px + var(--safe-r)) calc(18px + var(--safe-b)) calc(20px + var(--safe-l));
+            }
+
+            .cat-block {
+                margin-top: 14px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+
+            .name {
+                min-height: 0;
+                -webkit-line-clamp: 1;
+                font-size: 13px;
+            }
+
+            .sk {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .sk-card {
+                aspect-ratio: 3 / 4.9;
+            }
+        }
     </style>
 </head>
 
