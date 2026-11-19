@@ -1,5 +1,33 @@
 {
+    "胎教": [
+        {
+            "name": "莫扎特胎教钢琴曲",
+            "icon": "https://aka.doubaocdn.com/s/zaUkdGSTRb",
+            "source": "bilibili",
+            "id": 100006
+        },
+        {
+            "name": "280天胎教音乐",
+            "icon": "https://aka.doubaocdn.com/s/Y12UbFWNQc",
+            "source": "bilibili",
+            "id": 100007
+        }
+    ],
+    "儿歌童谣": [
+        {
+            "name": "宝宝儿歌 100 首",
+            "icon": "https://aka.doubaocdn.com/s/VEEKEoZSTy",
+            "source": "bilibili",
+            "id": 100008
+        }
+    ],
     "绘本故事": [
+        {
+            "name": "大头儿子睡前故事",
+            "icon": "https://aka.doubaocdn.com/s/q8wCoInh9D",
+            "source": "bilibili",
+            "id": 100009
+        },
         {
             "name": "中国民间故事",
             "icon": "images/dxB35DL7t0MeKk2A7Q6k9p7AaCSL0SDulcqxmOFHbgnA91522582697213compressflag.jpg",
